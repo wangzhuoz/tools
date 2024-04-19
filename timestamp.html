@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timestamp Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #currentTimestamp {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .converter-container {
+            width: 80%; /* Adjust the width as needed */
+            display: flex;
+            flex-wrap: wrap; /* This makes the divs wrap onto new lines */
+            justify-content: space-between; /* Adjust alignment as needed */
+        }
+        .converter {
+            width: 48%; /* Adjust the width of each converter */
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            text-align: center;
+            margin-bottom: 20px; /* Add margin between the converters */
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #convertedTimeSeconds, #convertedTimeMilliseconds, #convertedTimeString, #convertedDateTime {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #fff;
+            font-weight: bold;
+            background-color: #007bff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="currentTimestamp"></div>
+    <div class="converter-container">
+        <div class="converter">
+            <h2>Convert Seconds to Time</h2>
+            <label for="secondsInput">Enter Seconds:</label>
+            <input type="text" id="secondsInput" placeholder="Enter seconds...">
+            <button type="button" onclick="convertSeconds()">Convert</button>
+            <p id="convertedTimeSeconds"></p>
+        </div>
+        <div class="converter">
+            <h2>Convert Milliseconds to Time</h2>
+            <label for="millisecondsInput">Enter Milliseconds:</label>
+            <input type="text" id="millisecondsInput" placeholder="Enter milliseconds...">
+            <button type="button" onclick="convertMilliseconds()">Convert</button>
+            <p id="convertedTimeMilliseconds"></p>
+        </div>
+        <div class="converter">
+            <h2>Convert Time String to Timestamp</h2>
+            <label for="timeStringInput">Enter Time String:</label>
+            <input type="text" id="timeStringInput" placeholder="Enter time string...">
+            <button type="button" onclick="convertTimeString()">Convert</button>
+            <p id="convertedTimeString"></p>
+        </div>
+        <div class="converter">
+            <h2>Convert Date & Time to Timestamp</h2>
+            <label for="dateInput">Date:</label>
+            <input type="date" id="dateInput">
+            <label for="timeInput">Time:</label>
+            <input type="time" id="timeInput">
+            <button type="button" onclick="convertDateTime()">Convert</button>
+            <p id="convertedDateTime"></p>
+        </div>
+    </div>
+
+    <script>
+        function updateCurrentTimestamp() {
+            var currentTimestampElement = document.getElementById('currentTimestamp');
+            var currentDate = new Date();
+            var formattedTimestamp = formatDate(currentDate);
+            currentTimestampElement.innerText = formattedTimestamp;
+        }
+
+        function startTimer() {
+            updateCurrentTimestamp();
+            setInterval(updateCurrentTimestamp, 1000);
+        }
+
+        function convertSeconds() {
+            var seconds = document.getElementById('secondsInput').value;
+            var date = new Date(seconds * 1000); // Convert seconds to milliseconds
+            var formattedDate = formatDate(date);
+            document.getElementById('convertedTimeSeconds').innerText = formattedDate;
+        }
+
+        function convertMilliseconds() {
+            var milliseconds = document.getElementById('millisecondsInput').value;
+            var date = new Date(parseInt(milliseconds)); // Parse milliseconds as integer
+            var formattedDate = formatDate(date);
+            document.getElementById('convertedTimeMilliseconds').innerText = formattedDate;
+        }
+
+        function convertTimeString() {
+            var timeString = document.getElementById('timeStringInput').value;
+            var timestamp = Date.parse(timeString); // Parse time string to timestamp
+            if (!isNaN(timestamp)) {
+                document.getElementById('convertedTimeString').innerText = timestamp;
+            } else {
+                document.getElementById('convertedTimeString').innerText = "Invalid time string";
+            }
+        }
+
+        function convertDateTime() {
+            var dateInput = document.getElementById('dateInput').value;
+            var timeInput = document.getElementById('timeInput').value;
+            var dateTimeString = dateInput + "T" + timeInput; // Combine date and time strings
+            var timestamp = Date.parse(dateTimeString); // Parse date and time string to timestamp
+            if (!isNaN(timestamp)) {
+                document.getElementById('convertedDateTime').innerText = timestamp;
+            } else {
+                document.getElementById('convertedDateTime').innerText = "Invalid date or time";
+            }
+        }
+
+        function formatDate(date) {
+            var year = date.getFullYear();
+            var month = padZero(date.getMonth() + 1);
+            var day = padZero(date.getDate());
+            var hours = padZero(date.getHours());
+            var minutes = padZero(date.getMinutes());
+            var seconds = padZero(date.getSeconds());
+            return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+        }
+
+        function padZero(number) {
+            return (number < 10 ? '0' : '') + number;
+        }
+
+        // Start the timer when the page loads
+        startTimer();
+    </script>
+</body>
+</html>
